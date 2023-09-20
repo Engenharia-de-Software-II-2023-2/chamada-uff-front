@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/classroom.dart';
+import '../../modelos/classroom.dart';
 
 class ClassItem extends StatelessWidget {
   final Classroom classroom;
@@ -39,7 +39,7 @@ class ClassItem extends StatelessWidget {
           trailing:
             classroom.activeClass ? Icon(Icons.check_circle, color: Colors.green) : null,
           onTap: () {
-            Navigator.of(context).pushNamed('/classDetail', arguments: classroom);
+            // Navigator.of(context).pushNamed('/classDetail', arguments: classroom);
             },
         ),
       ),

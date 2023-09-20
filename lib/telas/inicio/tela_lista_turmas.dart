@@ -1,16 +1,20 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables
+
 import 'package:flutter/material.dart';
-import '../models/classroom.dart';
-import '../widgets/class/item.dart';
+import '../../modelos/classroom.dart';
+import '../../widgets/turmas/item.dart';
+
 
 class ClassListScreen extends StatelessWidget {
   final List<Classroom> classrooms;
 
-  ClassListScreen(this.classrooms);
+  ClassListScreen({Key? key, required this.classrooms}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.lightBlue,
         title: Text('Turmas'),
       ),
       body: Container(
