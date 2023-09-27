@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/class_list.dart';
+import 'screens/classroom_detail.dart';
 import 'models/classroom.dart';
 
 void main() {
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
     ),
     // Add more classrooms here
   ];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -39,7 +41,16 @@ class MyApp extends StatelessWidget {
       initialRoute: '/classList',
       routes: {
         '/classList': (ctx) => ClassListScreen(classrooms),
-
+        //'/classroomDetail': (ctx) => ClassroomDetailScreen(classroom),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/classroomDetail') {
+          final classroom = settings.arguments as Classroom;
+          return MaterialPageRoute(
+            builder: (ctx) => ClassroomDetailScreen(classroom),
+          );
+        }
+        return null;
       },
     );
   }
