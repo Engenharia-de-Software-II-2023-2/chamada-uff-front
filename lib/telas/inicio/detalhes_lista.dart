@@ -17,7 +17,7 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
   Attendance attendance = Attendance();
   List<String> weekDays = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
   String selectedWeekDay = '';
-  bool aluno = true;
+  bool aluno = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
