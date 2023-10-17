@@ -3,12 +3,18 @@
 import 'package:flutter/material.dart';
 import '../../modelos/classroom.dart';
 import '../../widgets/turmas/item.dart';
+import '../../api/api_service.dart';
 
 
 class ClassListScreen extends StatelessWidget {
   final List<Classroom> classrooms;
+  final AuthService authService = AuthService();
 
   ClassListScreen({Key? key, required this.classrooms}) : super(key: key);
+
+  void _performLogout(BuildContext context)  {
+    authService.performLogout(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +22,14 @@ class ClassListScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.lightBlue,
         title: Text('Turmas'),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.logout), // Ícone de logout (substitua pelo ícone desejado)
+                onPressed: () {
+                  _performLogout(context); // Função para executar o logout
+                },
+              ),
+            ],
       ),
       body: Container(
         color: Colors.blue[50],
