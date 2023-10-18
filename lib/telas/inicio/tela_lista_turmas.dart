@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import '../../modelos/classroom.dart';
 import '../../widgets/turmas/item.dart';
+import '../../widgets/padrao/app_bar.dart';
+
 
 
 class ClassListScreen extends StatelessWidget {
@@ -12,9 +14,9 @@ class ClassListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.lightBlue,
-        title: Text('Turmas'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: DefaultAppBar(titleAppBar: "Turmas"),
       ),
       body: Container(
         color: Colors.blue[50],

@@ -2,13 +2,14 @@ import 'package:chamada_inteligente/modelos/classroom.dart';
 import 'package:flutter/material.dart';
 import '../inicio/tela_lista_turmas.dart';
 import '../../api/api_service.dart';
+import '../padrao/no_information.dart';
+
 
 class TelaLogin extends StatelessWidget {
-  const TelaLogin({Key? key}) : super (key: key);
-  //const GlobalKey<ScaffoldState> _scaffoldKey =  const GlobalKey<ScaffoldState>();
   final TextEditingController loginController = TextEditingController();
   final TextEditingController senhaController = TextEditingController();
-  static const AuthService authService = AuthService();
+  final AuthService authService = AuthService();
+
 
   Future<void> _onLoginButtonPressed(BuildContext context) async {
     final result = await authService.doLogin(
@@ -18,23 +19,31 @@ class TelaLogin extends StatelessWidget {
 
     if (result == true) {
       try {
-        final List<Classroom> classes = await authService.getClassList(1);
-        Navigator.push(
+        final List<Classroom> classes = await authService.getClassList();
+        Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(
-            builder: (context) => ClassListScreen(classrooms: classes),
+        MaterialPageRoute(
+          builder: (context) => ClassListScreen(classrooms: classes),
           ),
+          (Route<dynamic> route) => false,
         );
       } catch (e) {
         // Trate possíveis erros ao obter a lista de classes aqui.
         print('Erro ao obter a lista de classes: $e');
+        final errorMessage = e.toString();
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NoInformation(message: "Não há inscrição de turmas nesse período", titleAppBar: "Turmas"),
+          ),
+              (Route<dynamic> route) => false,
+        );
       }
     } else {
-      // A requisição falhou.
-      // Exibir uma mensagem de erro usando um SnackBar.
+      print('Não vou chamar as listas');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Usuário ou senha inválido'),
+        content: Text('Usuário ou senha inválido'),
         ),
       );
     }
@@ -64,49 +73,56 @@ class TelaLogin extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: 250,
-                    height: 100,
-                    child: TextField(
-                      controller: loginController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Login',
+
+        child: Form(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: 250,
+                      height: 100,
+                      child: TextFormField(
+                        controller: loginController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Login',
+                        ),
+                        textInputAction: TextInputAction.next,
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 250,
-                    height: 100,
-                    child: TextField(
-                      controller: senhaController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Senha',
+                    SizedBox(
+                      width: 250,
+                      height: 100,
+                      child: TextFormField(
+                        controller: senhaController,
+                        obscureText: true,
+                        textInputAction: TextInputAction.done,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Senha',
+                        ),
+                        onFieldSubmitted: (value) {
+                          _onLoginButtonPressed(context);
+                        }
+    ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        _onLoginButtonPressed(context);
+                      },
+                      child: Text('Login', style: TextStyle(color: Colors.white)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
                       ),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      _onLoginButtonPressed(context);
-                    },
-                    child: Text('Login', style: TextStyle(color: Colors.white)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
