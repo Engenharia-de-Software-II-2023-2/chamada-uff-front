@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../inicio/tela_lista_turmas.dart';
 import '../../api/api_service.dart';
 import '../../modelos/classroom.dart';
+import '../padrao/no_information.dart';
 
 
 class TelaLogin extends StatelessWidget {
@@ -13,15 +14,13 @@ class TelaLogin extends StatelessWidget {
   final AuthService authService = AuthService();
 
   Future<void> _onLoginButtonPressed(BuildContext context) async {
-    print("chamei");
     final result = await authService.doLogin(
       loginController.text,
       senhaController.text,
     );
-
     if (result == true) {
       try {
-        final List<Classroom> classes = await authService.getClassList(1);
+        final List<Classroom> classes = await authService.getClassList();
         Navigator.pushAndRemoveUntil(
           context,
         MaterialPageRoute(
@@ -30,12 +29,20 @@ class TelaLogin extends StatelessWidget {
           (Route<dynamic> route) => false,
         );
       } catch (e) {
-      // Trate possíveis erros ao obter a lista de classes aqui.
-      print('Erro ao obter a lista de classes: $e');
+        // Trate possíveis erros ao obter a lista de classes aqui.
+        print('Erro ao obter a lista de classes: $e');
+        // Agora, em vez de apenas imprimir a exceção, você pode exibi-la em um widget.
+        final errorMessage = e.toString();
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NoInformation(message: "Não há inscrição de turmas nesse período", titleAppBar: "Turmas"),
+          ),
+              (Route<dynamic> route) => false,
+        );
       }
     } else {
-      // A requisição falhou.
-      // Exibir uma mensagem de erro usando um SnackBar.
+      print('Não vou chamar as listas');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
         content: Text('Usuário ou senha inválido'),

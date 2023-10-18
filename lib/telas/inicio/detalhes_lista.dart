@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../modelos/attendance.dart';
 import '../../modelos/classroom.dart';
+import '../../widgets/padrao/app_bar.dart';
 
 class ClassroomDetailScreen extends StatefulWidget {
   final Classroom classroom;
@@ -21,8 +22,9 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Informações da Turma'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: DefaultAppBar(titleAppBar: "Informações da Turma"),
       ),
       body: SingleChildScrollView(
         child: Padding(
