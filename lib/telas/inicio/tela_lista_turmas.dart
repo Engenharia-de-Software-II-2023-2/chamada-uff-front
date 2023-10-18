@@ -7,7 +7,6 @@ import '../../widgets/turmas/item.dart';
 
 class ClassListScreen extends StatelessWidget {
   final List<Classroom> classrooms;
-
   ClassListScreen({Key? key, required this.classrooms}) : super(key: key);
 
   @override

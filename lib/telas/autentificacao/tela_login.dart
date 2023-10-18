@@ -8,7 +8,7 @@ class TelaLogin extends StatelessWidget {
   //const GlobalKey<ScaffoldState> _scaffoldKey =  const GlobalKey<ScaffoldState>();
   final TextEditingController loginController = TextEditingController();
   final TextEditingController senhaController = TextEditingController();
-  const AuthService authService = AuthService();
+  static const AuthService authService = AuthService();
 
   Future<void> _onLoginButtonPressed(BuildContext context) async {
     final result = await authService.doLogin(
