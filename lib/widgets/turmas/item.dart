@@ -45,9 +45,7 @@ class ClassItem extends StatelessWidget {
               ),
             ],
           ),
-          trailing: classroom.activeClass
-              ? Icon(Icons.check_circle, color: Colors.green)
-              : null,
+          trailing: classroom.classCode == 'D1' ? Icon(Icons.check_circle, color: Colors.green) : null,
           onTap: () {
             Navigator.push(
                 context,

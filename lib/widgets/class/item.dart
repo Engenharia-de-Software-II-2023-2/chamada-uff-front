@@ -1,5 +1,6 @@
+import 'package:chamada_inteligente/modelos/classroom.dart';
 import 'package:flutter/material.dart';
-import '../../models/classroom.dart';
+// import '../../models/classroom.dart';
 
 class ClassItem extends StatelessWidget {
   final Classroom classroom;

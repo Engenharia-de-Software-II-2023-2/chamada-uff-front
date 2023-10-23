@@ -1,5 +1,5 @@
 import 'package:chamada_inteligente/modelos/classroom.dart';
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 final List<Classroom> classrooms = [
     Classroom(
       id: 1,
@@ -21,3 +21,9 @@ final List<Classroom> classrooms = [
     ),
     // Add more classrooms here
   ];
+
+
+// Future read_storage() async {
+//     var role = await storage.read(key: 'role');
+//     return role;
+//   }

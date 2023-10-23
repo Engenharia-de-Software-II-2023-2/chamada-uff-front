@@ -1,6 +1,8 @@
+import 'package:chamada_inteligente/modelos/attendance.dart';
+import 'package:chamada_inteligente/modelos/classroom.dart';
 import 'package:flutter/material.dart';
-import '../models/classroom.dart';
-import '../models/attendance.dart';
+// import '../models/classroom.dart';
+// import '../models/attendance.dart';
 
 class ClassroomDetailScreen extends StatefulWidget {
   final Classroom classroom;
