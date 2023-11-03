@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
-
 import '../../modelos/attendance.dart';
 import '../../modelos/classroom.dart';
 import '../../widgets/padrao/app_bar.dart';
+import 'package:provider/provider.dart';
+import '../../providers/switch_provider.dart';
+import '../../api/attendance/manager_attendance.dart';
+import '../../widgets/turmas/turma_switch.dart';
 
 class ClassroomDetailScreen extends StatefulWidget {
   final Classroom classroom;
   ClassroomDetailScreen({Key? key, required this.classroom}) : super(key: key);
   bool autoAttendance = false;
+  bool isFirstTimeSwitchActivated = true;
+
+
+
 
   @override
   _ClassroomDetailScreenState createState() => _ClassroomDetailScreenState();
@@ -19,8 +26,25 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
   List<String> weekDays = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
   String selectedWeekDay = '';
   bool aluno = false;
+  bool isCallActive = false; // Variável para controlar se há uma chamada ativa
+
+  @override
+  void initState() {
+    super.initState();
+    checkActiveCall();
+  }
+
+  Future<void> checkActiveCall() async {
+    // Substitua este trecho com a chamada real para verificar a chamada ativa
+    bool hasActiveCall = await ManagerAttendance.checkActiveCall(widget.classroom.id);
+    setState(() {
+      isCallActive = hasActiveCall;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final switchProvider = Provider.of<SwitchProvider>(context);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(kToolbarHeight),
@@ -79,24 +103,24 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
                 ),
               ),
               if (_isCollapsed && aluno == false) ...[
-                ListTile(
-                  title: Text('Iniciar chamada'),
-                  trailing: Switch(
-                    value: widget.autoAttendance,
-                    onChanged: (value) {
-                      setState(() {
-                        widget.autoAttendance = value;
-                      });
-                    },
+                for (int index = 0; index < switchProvider.classrooms.length; index++)  // Use switchProvider em vez de SwitchProvider
+                  ListTile(
+                    title: Text('Iniciar chamada'),
+                    trailing: ClassroomSwitch.buildSwitch(index, widget.isFirstTimeSwitchActivated),
                   ),
-                ),
               ],
-              if(aluno == true) ...[
-                SizedBox(height: 50,),
-                ElevatedButton(onPressed: (){}, 
+              if (aluno == true) ...[
+                SizedBox(height: 50),
+                ElevatedButton(
+                  onPressed: isCallActive ?  ManagerAttendance.markAttendance : null,
                   child: Text("Marcar Presença"),
-                  style: ElevatedButton.styleFrom(minimumSize: Size(200,80))
+                  style: ElevatedButton.styleFrom(minimumSize: Size(200, 80)),
                 ),
+                if (isCallActive) ...[
+                  Text("Pressione o botão para marcar presença."),
+                ] else ...[
+                  Text("Não há chamadas abertas para essa turma no momento."),
+                ],
               ],
               if (!_isCollapsed) ...[
                 ListTile(
@@ -203,3 +227,5 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
     );
   }
 }
+
+

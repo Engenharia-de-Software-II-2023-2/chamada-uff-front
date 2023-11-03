@@ -1,9 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables
-
+import '../../providers/switch_provider.dart';
 import 'package:flutter/material.dart';
 import '../../modelos/classroom.dart';
 import '../../widgets/turmas/item.dart';
 import '../../widgets/padrao/app_bar.dart';
+import 'package:provider/provider.dart';
 
 
 
@@ -13,6 +14,9 @@ class ClassListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final switchProvider = Provider.of<SwitchProvider>(context);
+    switchProvider.updateClassroomsList(classrooms);
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(kToolbarHeight),

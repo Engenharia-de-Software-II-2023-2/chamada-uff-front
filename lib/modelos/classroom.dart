@@ -5,7 +5,7 @@ class Classroom {
   final String classCode;
   final String semester;
   final String classTime;
-  final bool activeClass;
+  bool isSwitchOn;
 
 
   Classroom({
@@ -15,6 +15,6 @@ class Classroom {
     required this.classCode,
     required this.semester,
     required this.classTime,
-    required this.activeClass,
+    this.isSwitchOn = false,
   });
 }
