@@ -14,8 +14,6 @@ class ClassListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final switchProvider = Provider.of<SwitchProvider>(context);
-    switchProvider.updateClassroomsList(classrooms);
 
     return Scaffold(
       appBar: PreferredSize(

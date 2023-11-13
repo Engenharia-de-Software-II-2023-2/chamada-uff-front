@@ -1,44 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../providers/switch_provider.dart';
+
 import '../../api/attendance/manager_attendance.dart';
 
 class ClassroomSwitch {
-  static Widget buildSwitch(int index, bool isFirstTimeSwitchActivated) {
-    return Consumer<SwitchProvider>(
-      builder: (context, switchProvider, child) {
-        return Switch(
-          value: switchProvider.classrooms[index].isSwitchOn,
-          onChanged: (value) async {
-            switchProvider.toggleSwitch(index);
-            if (value) {
-              if (isFirstTimeSwitchActivated) {
-                final bool createResponse = await ManagerAttendance.createAttendance(widget.classroom.id);
-                if (createResponse) {
-                  final bool controlResponse = await ManagerAttendance.controlAttendance();
-                  if (controlResponse) {
-                    isFirstTimeSwitchActivated = false; // Marque que não é mais a primeira vez
-                  } else {
-                    value = !value;
-                  }
-                } else {
-                  value = !value;
-                }
+  static Widget buildSwitch(bool isFirstTimeSwitchActivated, bool initialValue, int classroomId) {
+    return Switch(
+      value: initialValue,
+      onChanged: (initialValue) async {
+          print(initialValue.toString());
+          if (isFirstTimeSwitchActivated) {
+            final bool createResponse = await ManagerAttendance.createAttendance(classroomId);
+            if (createResponse) {
+              final bool controlResponse = await ManagerAttendance.controlAttendance();
+              if (controlResponse) {
+                initialValue = await ManagerAttendance.checkActiveCall(classroomId);
+                isFirstTimeSwitchActivated = false; // Marque que não é mais a primeira vez
               } else {
-                final bool controlResponse = await ManagerAttendance.controlAttendance();
-                if (!controlResponse) {
-                  value = !value;
-                }
+                initialValue = await ManagerAttendance.checkActiveCall(classroomId);
               }
             } else {
-              final bool controlResponse = await ManagerAttendance.controlAttendance();
-              if (!controlResponse) {
-                value = !value;
-              }
+              initialValue = await ManagerAttendance.checkActiveCall(classroomId);
             }
-          },
-        );
-      },
+          } else {
+            final bool controlResponse = await ManagerAttendance.controlAttendance();
+              initialValue = await ManagerAttendance.checkActiveCall(classroomId);
+          }
+        }
     );
   }
 }

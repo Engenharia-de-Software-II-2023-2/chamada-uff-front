@@ -18,6 +18,7 @@ class ManagerAttendance {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
+      print(data.toString());
       final String attendanceId = data['attendanceId'];
       await storage.write(key: 'attendanceId', value: attendanceId);
       // como vamos definir o momento de criar uma nova chamada ou ativar e desativar uma já aberta?
@@ -55,7 +56,7 @@ class ManagerAttendance {
   static Future<bool> checkActiveCall(int id) async {
     final storage = FlutterSecureStorage();
     final url = Uri.parse(
-        'http://localhost:8080/attendance/getActiveAttendances/$id');
+        'https://engsoft2grupo3api.azurewebsites.net/attendance/getActiveAttendances/$id');
 
     final response = await http.get(
       url,
@@ -75,6 +76,7 @@ class ManagerAttendance {
 
   static Future<bool> markAttendance() async {
     final storage = FlutterSecureStorage();
+    return true;
 
   }
 

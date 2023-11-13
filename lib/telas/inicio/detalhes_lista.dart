@@ -35,7 +35,6 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
   }
 
   Future<void> checkActiveCall() async {
-    // Substitua este trecho com a chamada real para verificar a chamada ativa
     bool hasActiveCall = await ManagerAttendance.checkActiveCall(widget.classroom.id);
     setState(() {
       isCallActive = hasActiveCall;
@@ -103,10 +102,13 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
                 ),
               ),
               if (_isCollapsed && aluno == false) ...[
-                for (int index = 0; index < switchProvider.classrooms.length; index++)  // Use switchProvider em vez de SwitchProvider
                   ListTile(
                     title: Text('Iniciar chamada'),
-                    trailing: ClassroomSwitch.buildSwitch(index, widget.isFirstTimeSwitchActivated),
+                    trailing: ClassroomSwitch.buildSwitch(
+                        widget.isFirstTimeSwitchActivated,
+                        isCallActive,
+                        widget.classroom.id
+                    ),
                   ),
               ],
               if (aluno == true) ...[

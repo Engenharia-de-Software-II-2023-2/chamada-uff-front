@@ -9,6 +9,7 @@ final storage = FlutterSecureStorage();
 Future<List<Classroom>> studentClassList() async {
   final token = await storage.read(key: 'token');
   final id = await storage.read(key: 'id');
+  print(id.toString());
   final jsonData = json.encode({
     "studentId": id,
     "year": "2023",
@@ -49,9 +50,9 @@ Future<List<Classroom>> studentClassList() async {
 
 Future <List<Classroom>> professorClassList() async {
   final token = await storage.read(key: 'token');
-  final id = await storage.read(key: 'id');
+  final id = await storage.read(key: 'id') ?? "0";
   final jsonData = json.encode({
-    "professorId": id,
+    "professorId": int.parse(id),
     "year": "2023",
     "semester": 1
   });
@@ -67,18 +68,19 @@ Future <List<Classroom>> professorClassList() async {
   );
   if (response.statusCode == 200) {
     final Map<String, dynamic> data = json.decode(response.body);
-    final List<dynamic> classesData = data['classes'];
+    final List<dynamic> classesData = data['professorClasses'];
     if (classesData.isNotEmpty) {
       final List<Classroom> classes = classesData.map((turma) {
         return Classroom(
-          id: turma['id'] as int,
+          id: turma['classId'] as int,
           name: turma['subjectName'],
-          professor: turma['professorName'],
+          professor: 'não tem nome',
           classCode: turma['className'],
-          semester: turma['semester'],
+          semester: turma['semester'].toString(),
           classTime: turma['schedule'],
         );
       }).toList();
+
       return classes;
     } else {
       throw Exception('Não há inscrição de turmas nesse período');
@@ -94,6 +96,7 @@ Future<List<Classroom>> getClassList() async {
     classes = await studentClassList();
   } else{
     classes = await professorClassList();
+
   }
   return classes;
 }

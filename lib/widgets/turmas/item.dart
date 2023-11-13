@@ -1,4 +1,3 @@
-import 'package:chamada_inteligente/helpers/salas_de_aula_dummy.dart';
 import 'package:flutter/material.dart';
 import '../../modelos/classroom.dart';
 import '../../telas/inicio/detalhes_lista.dart';
@@ -45,9 +44,6 @@ class ClassItem extends StatelessWidget {
               ),
             ],
           ),
-          trailing: classroom.activeClass
-              ? Icon(Icons.check_circle, color: Colors.green)
-              : null,
           onTap: () {
             Navigator.push(
                 context,

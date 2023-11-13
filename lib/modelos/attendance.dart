@@ -13,8 +13,8 @@ class Attendance {
     this.weekDay = '',
     this.start = '',
     this.end = '',
-    this.professorLatitude, // Adicionando latitude do professor como parâmetro opcional
-    this.professorLongitude, // Adicionando longitude do professor como parâmetro opcional
+    this.professorLatitude = 0, // Adicionando latitude do professor como parâmetro opcional
+    this.professorLongitude = 0, // Adicionando longitude do professor como parâmetro opcional
   });
 
   // Construtor nomeado para criar uma instância com a localização do professor
