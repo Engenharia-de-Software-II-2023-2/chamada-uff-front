@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
 
+import 'package:chamada_inteligente/telas/historico_informacoes_turma.dart';
+import 'package:chamada_inteligente/telas/informacao_chamada_professor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../modelos/attendance.dart';
@@ -20,12 +22,14 @@ Future<bool> verifica_aluno() async {
 Future<bool> criar_chamada() async {
   final token = await FlutterSecureStorage().read(key: 'token');
   final class_id = 4;
+  final jsonData =
+        json.encode({"classId": 1});
   final url = Uri.parse(
-      'https://engsoft2grupo3api.azurewebsites.net/attendance/createAttendance/$class_id');
+      'https://engsoft2grupo3api.azurewebsites.net/attendance/createAttendance');
   final response = await http.post(url, headers: {
     'Authorization': 'Bearer $token',
     'Content-Type': 'application/json'
-  });
+  },body: jsonData);
   if (response.statusCode == 200) {
     return true;
   } else {
@@ -118,9 +122,11 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          // Navegue para a página de histórico da turma
-                          // Substitua '/historicoTurma' pela rota correta
-                          Navigator.of(context).pushNamed('/historicoTurma');
+                          Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        HistoricoChamada(class_id: widget.classroom.id)));
                         },
                         child: Text('Histórico da Turma'),
                       ),

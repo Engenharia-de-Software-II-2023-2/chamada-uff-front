@@ -75,7 +75,7 @@ class AuthService {
     final token = await storage.read(key: 'token');
     final id = await storage.read(key: 'id');
     final jsonData =
-        json.encode({"professorId": 2, "year": "2023", "semester": 1});
+        json.encode({"professorId": id, "year": "2023", "semester": 1});
     final url = Uri.parse(
         'https://engsoft2grupo3api.azurewebsites.net/class/professsorClasses');
     final response = await http.post(url,
