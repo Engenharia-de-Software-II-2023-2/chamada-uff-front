@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, non_constant_identifier_names, prefer_typing_uninitialized_variables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, non_constant_identifier_names, prefer_typing_uninitialized_variables, prefer_const_declarations
 
 import 'dart:convert';
 
@@ -14,7 +14,7 @@ Future<List> presenca_aluno(chamada_id, class_id) async {
   // final user_id = await FlutterSecureStorage().read(key: 'id');
   List presencas = [];
   final class_id = 4;
-  final jsonData = json.encode({"studentId": 1, "classId": class_id});
+  final jsonData = json.encode({"studentId": 1, "classId": 1});
   final url = Uri.parse(
       'https://engsoft2grupo3api.azurewebsites.net/enrollment/checkStudentAttendanceRecord');
   final response = await http.post(url,
@@ -32,7 +32,7 @@ Future<List> presenca_aluno(chamada_id, class_id) async {
             chamada_id: chamadada_atual['attendanceId'],
             aluno_id: chamadada_atual['studentId'],
             class_id: chamadada_atual['classId'],
-            inicio_chamada: chamadada_atual['start'],
+            inicio_chamada: chamadada_atual['start'] ?? 'Sem hora especificada' ,
             presenca:
                 chamadada_atual['wasPresent'] == true ? 'Presente' : 'Ausente');
         presencas.add(presenca);
@@ -69,7 +69,7 @@ class _InformacaoChamadaAlunoState extends State<InformacaoChamadaAluno> {
         backgroundColor: Color(0xFFE1F4FE),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(kToolbarHeight),
-          child: DefaultAppBar(titleAppBar: "Chamada 08/11/2023"),
+          child: DefaultAppBar(titleAppBar: "Chamada ${historico_turma.data}"),
         ),
         body: SingleChildScrollView(
             child: Padding(

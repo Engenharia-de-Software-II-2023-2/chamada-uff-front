@@ -83,7 +83,7 @@ class _HistoricoChamadaState extends State<HistoricoChamada> {
               ),
             ),
             FutureBuilder(
-              future: historico_professor(1),
+              future: historico_professor(1), //widget.class_id
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());

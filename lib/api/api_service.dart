@@ -35,6 +35,7 @@ class AuthService {
   }
 
   Future<List<Classroom>> studentClassList() async {
+    //sempre pega o aluno de id 1 idependente de qual fizer login
     final token = await storage.read(key: 'token');
     final id = await storage.read(key: 'id');
     final jsonData =
@@ -72,6 +73,7 @@ class AuthService {
   }
 
   Future<List<Classroom>> professorClassList() async {
+    //logar com professor, admin123
     final token = await storage.read(key: 'token');
     final id = await storage.read(key: 'id');
     final jsonData =
