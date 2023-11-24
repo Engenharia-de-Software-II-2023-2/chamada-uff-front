@@ -2,13 +2,13 @@ import 'package:geolocator/geolocator.dart';
 
 class AttendanceChecker {
   static Future<bool> checkAttendance(
-      Position professorLocation, Position studentLocation) async {
+      double professorLatitude, double professorLogitude, double studentLatitude, double studentLogitude) async {
       double radius = 15.0;
       double distance = await Geolocator.distanceBetween(
-        professorLocation.latitude,
-        professorLocation.longitude,
-        studentLocation.latitude,
-        studentLocation.longitude,
+        professorLatitude,
+        professorLogitude,
+        studentLatitude,
+        studentLogitude,
       );
 
     return distance <= radius;

@@ -25,6 +25,7 @@ Future<List<Classroom>> studentClassList() async {
       },
       body: jsonData
   );
+
   if (response.statusCode == 200) {
     final Map<String, dynamic> data = json.decode(response.body);
     final List<dynamic> classesData = data['enrollments'];
@@ -39,7 +40,6 @@ Future<List<Classroom>> studentClassList() async {
           classTime: turma['schedule'],
         );
       }).toList();
-
       return classes;
     } else {
       throw Exception('Não há inscrição de turmas nesse período');
@@ -76,7 +76,7 @@ Future <List<Classroom>> professorClassList() async {
           name: turma['subjectName'],
           professor: 'não tem nome',
           classCode: turma['className'],
-          semester: turma['semester'].toString(),
+          semester: turma['semester'],
           classTime: turma['schedule'],
         );
       }).toList();

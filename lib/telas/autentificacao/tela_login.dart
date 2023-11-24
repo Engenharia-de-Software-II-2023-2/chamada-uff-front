@@ -17,7 +17,6 @@ class TelaLogin extends StatelessWidget {
       loginController.text,
       senhaController.text,
     );
-
     if (result == true) {
       try {
         final List<Classroom> classes = await getClassList();

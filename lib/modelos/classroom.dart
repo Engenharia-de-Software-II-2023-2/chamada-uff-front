@@ -3,7 +3,7 @@ class Classroom {
   final String name;
   final String professor;
   final String classCode;
-  final String semester;
+  final int semester;
   final String classTime;
   bool isSwitchOn;
 

@@ -6,12 +6,13 @@ import 'package:provider/provider.dart';
 import '../../providers/switch_provider.dart';
 import '../../api/attendance/manager_attendance.dart';
 import '../../widgets/turmas/turma_switch.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ClassroomDetailScreen extends StatefulWidget {
   final Classroom classroom;
   ClassroomDetailScreen({Key? key, required this.classroom}) : super(key: key);
   bool autoAttendance = false;
-  bool isFirstTimeSwitchActivated = true;
+
 
 
 
@@ -27,18 +28,38 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
   String selectedWeekDay = '';
   bool aluno = false;
   bool isCallActive = false; // Variável para controlar se há uma chamada ativa
+  bool showConfirmationMessage = false;
+  bool attendanceResult = false;
 
   @override
   void initState() {
     super.initState();
-    checkActiveCall();
+    _initializeScreen();
   }
 
-  Future<void> checkActiveCall() async {
-    bool hasActiveCall = await ManagerAttendance.checkActiveCall(widget.classroom.id);
+  Future<void> _initializeScreen() async {
+    final attendanceStatus = await checkActiveCall();
+    final actualRole = await checkRole();
+
     setState(() {
-      isCallActive = hasActiveCall;
+      aluno = actualRole;
+      isCallActive = attendanceStatus;
     });
+  }
+
+  Future<bool> checkActiveCall() async {
+    final hasActiveCall = await ManagerAttendance.checkActiveCall(widget.classroom.id);
+    return hasActiveCall;
+  }
+
+  Future<bool> checkRole() async{
+    final storage = FlutterSecureStorage();
+    final role = await storage.read(key: 'role');
+    if(role == "STUDENT"){
+      return true;
+    } else{
+      return false;
+    }
   }
 
   @override
@@ -104,24 +125,42 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
               if (_isCollapsed && aluno == false) ...[
                   ListTile(
                     title: Text('Iniciar chamada'),
-                    trailing: ClassroomSwitch.buildSwitch(
-                        widget.isFirstTimeSwitchActivated,
-                        isCallActive,
-                        widget.classroom.id
+                    trailing: ClassroomSwitch(
+                      classroomId: widget.classroom.id
                     ),
                   ),
               ],
               if (aluno == true) ...[
                 SizedBox(height: 50),
                 ElevatedButton(
-                  onPressed: isCallActive ?  ManagerAttendance.markAttendance : null,
+                  onPressed: () async {
+                    if (isCallActive && !attendanceResult) {
+                      attendanceResult = await ManagerAttendance.markAttendance();
+                      setState(() {
+                        showConfirmationMessage = true;
+                      });
+                    }
+                  },
                   child: Text("Marcar Presença"),
-                  style: ElevatedButton.styleFrom(minimumSize: Size(200, 80)),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(200, 80),
+                    // Desativar o botão quando a presença já foi confirmada
+                    backgroundColor: attendanceResult ? Colors.grey : null,
+                  ),
                 ),
                 if (isCallActive) ...[
-                  Text("Pressione o botão para marcar presença."),
+                  Text(attendanceResult ? "Presença confirmada!" : "Pressione o botão para marcar presença."),
                 ] else ...[
                   Text("Não há chamadas abertas para essa turma no momento."),
+                ],
+                if (showConfirmationMessage) ...[
+                  Text(
+                    attendanceResult ? "Presença confirmada!" : "Você não está no raio da sala de aula",
+                    style: TextStyle(
+                      color: attendanceResult ? Colors.green : Colors.red,
+                      fontSize: 16,
+                    ),
+                  ),
                 ],
               ],
               if (!_isCollapsed) ...[

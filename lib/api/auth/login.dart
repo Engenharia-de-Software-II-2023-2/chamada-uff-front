@@ -20,7 +20,6 @@ class AuthService {
       body: jsonData,
 
     );
-
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
       final String token = data['token'];
