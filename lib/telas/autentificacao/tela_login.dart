@@ -1,12 +1,10 @@
-// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
-
 import 'package:chamada_inteligente/modelos/classroom.dart';
 import 'package:flutter/material.dart';
 import '../inicio/tela_lista_turmas.dart';
 import '../../api/auth/login.dart';
 import '../padrao/no_information.dart';
 import '../../helpers/salas_de_aula_dummy.dart';
-import '../../api/classes/class-list.dart'
+import '../../api/classes/class-list.dart';
 
 
 class TelaLogin extends StatelessWidget {
@@ -19,8 +17,6 @@ class TelaLogin extends StatelessWidget {
     final result = await authService.doLogin(
       loginController.text,
       senhaController.text,
-      // 'professor','admin123' // user e senha professor
-      // 'a','1' //user e senha aluno
     );
 
     if (result == true) {
@@ -79,7 +75,7 @@ class TelaLogin extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-        // reverse: true,
+
         child: Form(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

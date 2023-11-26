@@ -1,5 +1,5 @@
 // ignore_for_file: prefer_const_constructors
-
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'telas/autentificacao/tela_autentificacao.dart';
 import 'providers/switch_provider.dart';

@@ -75,7 +75,7 @@ class ManagerAttendance {
 
   static Future<bool> markAttendance() async {
     final storage = FlutterSecureStorage();
-
+    return true;
   }
 
 }

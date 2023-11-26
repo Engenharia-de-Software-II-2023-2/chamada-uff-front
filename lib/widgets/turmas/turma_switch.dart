@@ -13,7 +13,7 @@ class ClassroomSwitch {
             switchProvider.toggleSwitch(index);
             if (value) {
               if (isFirstTimeSwitchActivated) {
-                final bool createResponse = await ManagerAttendance.createAttendance(widget.classroom.id);
+                final bool createResponse = await ManagerAttendance.createAttendance(1);//widget.classroom.id);
                 if (createResponse) {
                   final bool controlResponse = await ManagerAttendance.controlAttendance();
                   if (controlResponse) {
