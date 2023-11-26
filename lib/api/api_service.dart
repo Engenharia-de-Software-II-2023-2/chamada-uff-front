@@ -39,7 +39,7 @@ class AuthService {
     final token = await storage.read(key: 'token');
     final id = await storage.read(key: 'id');
     final jsonData =
-        json.encode({"studentId": 1, "year": "2023", "semester": 1});
+        json.encode({"studentId": id, "year": "2023", "semester": 1});
     final url = Uri.parse(
         'https://engsoft2grupo3api.azurewebsites.net/enrollment/getStudentEnrollments'); // Substitua pela URL correta
     final response = await http.post(url,
