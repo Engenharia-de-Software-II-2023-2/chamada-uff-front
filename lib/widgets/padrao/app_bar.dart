@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../api/logout.dart';
+import '../../api/auth/logout.dart';
 
 class DefaultAppBar extends StatelessWidget {
   final String titleAppBar;

@@ -3,8 +3,10 @@
 import 'package:chamada_inteligente/modelos/classroom.dart';
 import 'package:flutter/material.dart';
 import '../inicio/tela_lista_turmas.dart';
-import '../../api/api_service.dart';
+import '../../api/auth/login.dart';
 import '../padrao/no_information.dart';
+import '../../helpers/salas_de_aula_dummy.dart';
+import '../../api/classes/class-list.dart'
 
 
 class TelaLogin extends StatelessWidget {
@@ -23,7 +25,7 @@ class TelaLogin extends StatelessWidget {
 
     if (result == true) {
       try {
-        final List<Classroom> classes = await authService.getClassList();
+        final List<Classroom> classes = await getClassList();
         Navigator.pushAndRemoveUntil(
           context,
         MaterialPageRoute(

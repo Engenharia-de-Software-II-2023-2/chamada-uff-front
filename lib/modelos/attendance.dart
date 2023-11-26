@@ -4,8 +4,8 @@ class Attendance {
   String weekDay;
   String start;
   String end;
-
-
+  double professorLatitude; // Latitude do professor
+  double professorLongitude; // Longitude do professor
 
   Attendance({
     this.id = 0,
@@ -13,5 +13,19 @@ class Attendance {
     this.weekDay = '',
     this.start = '',
     this.end = '',
+    this.professorLatitude, // Adicionando latitude do professor como parâmetro opcional
+    this.professorLongitude, // Adicionando longitude do professor como parâmetro opcional
+  });
+
+  // Construtor nomeado para criar uma instância com a localização do professor
+  Attendance.withProfessorLocation({
+    required this.id,
+    required this.classId,
+    required this.weekDay,
+    required this.start,
+    required this.end,
+    required this.professorLatitude,
+    required this.professorLongitude,
   });
 }
+
