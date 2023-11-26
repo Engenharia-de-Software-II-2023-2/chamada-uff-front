@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../widgets/padrao/app_bar.dart';
 import 'package:http/http.dart' as http;
-
+//todo: realizar testes
 Future<List> presenca_aluno(chamada_id, class_id) async {
   final token = await FlutterSecureStorage().read(key: 'token');
   // final user_id = await FlutterSecureStorage().read(key: 'id');
@@ -184,7 +184,7 @@ class _InformacaoChamadaAlunoState extends State<InformacaoChamadaAluno> {
         )));
   }
 }
-
+//todo: realizar testes
 String somarHoraComDuracao(String hora, int duracaoEmSegundos) {
   if (hora == "Sem hora especificada") {
     return hora;

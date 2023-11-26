@@ -2,7 +2,7 @@ import 'package:chamada_inteligente/modelos/classroom.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
-
+//todo: realizar testes
 class AuthService {
   final storage = FlutterSecureStorage();
 

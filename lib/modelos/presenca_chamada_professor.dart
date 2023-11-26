@@ -20,7 +20,7 @@ class PresencaChamadaProfessor {
     required this.final_chamada,
     required this.presenca,
   });
-
+//todo: realizar testes
   Future<String> get_nomealuno() async {
     var aluno_id = this.aluno_id;
     final token = await FlutterSecureStorage().read(key: 'token');

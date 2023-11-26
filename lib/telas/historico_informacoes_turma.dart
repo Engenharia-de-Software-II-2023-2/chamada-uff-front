@@ -10,16 +10,8 @@ import 'dart:convert';
 
 import 'informacao_chamada_aluno.dart';
 
-// List<HistoricoInformacaoTurma> instancia_historico() {
-//   List<HistoricoInformacaoTurma> historicos = [];
-//   for (int i = 0; i < 5; i++) {
-//     // HistoricoInformacaoTurma historico =
-//     // HistoricoInformacaoTurma("2023/11/0$i", "08:00", "09:30", i);
-//     // historicos.add(historico);
-//   }
-//   return historicos;
-// }
 
+//todo: realizar testes
 Future<List> historico_professor(classId) async {
   final token = await FlutterSecureStorage().read(key: 'token');
   var url = Uri.parse(
