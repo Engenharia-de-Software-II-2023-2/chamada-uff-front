@@ -13,7 +13,6 @@ class Geolocation {
   // request de current position, insert in a list e check the time to send the list
   static Future<Geolocation> getGeolocation() async {
     Position position = await determinePosition();
-
     final Geolocation geolocation = Geolocation(
       latitude: position.latitude,
       longitude: position.longitude

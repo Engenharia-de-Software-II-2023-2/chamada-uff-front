@@ -83,5 +83,7 @@ class _ClassroomSwitchState extends State<ClassroomSwitch> {
       _isFirstTimeSwitchActivated = !activeCall;
       _initialValue = activeCall;
     });
+    print(_isFirstTimeSwitchActivated);
+    print(_initialValue);
   }
 }

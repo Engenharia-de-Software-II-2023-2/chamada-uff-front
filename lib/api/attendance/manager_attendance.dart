@@ -25,7 +25,6 @@ class ManagerAttendance {
         },
       body: jsonData
     );
-    print(response.statusCode);
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
       final int attendanceId = data['attendanceId'];
@@ -101,7 +100,6 @@ class ManagerAttendance {
       // Verifica se a lista não está vazia
       if (dataList.isNotEmpty) {
         final Map<String, dynamic> data = dataList.first;
-        print(data.toString());
         final int attendanceId = data['id'];
         final double latitude = data['latitude'];
         final double longitude = data['longitude'];
@@ -121,50 +119,95 @@ class ManagerAttendance {
 
   static Future<bool> markAttendance() async {
     final storage = FlutterSecureStorage();
-    final latitudeString = await storage.read(key: 'latitude');
-    final longitudeString = await storage.read(key: 'longitude');
+    final token = await storage.read(key: 'token');
+    final attendanceIdString = await storage.read(key: 'attendanceId');
+    final id = await storage.read(key: 'id');
+    final url = Uri.parse(
+        'https://engsoft2grupo3api.azurewebsites.net/response/createResponse');
+    final jsonData = json.encode({
+      "studentId": id,
+      "attendanceId": attendanceIdString,
+      "start": "2023-09-21T18:10:00",
+      "end": "2023-09-21T20:10:00"
+    });
 
-    if (latitudeString != null && longitudeString != null) {
-      final latitude = double.tryParse(latitudeString);
-      final longitude = double.tryParse(longitudeString);
-
-      if (latitude != null && longitude != null) {
-        // Agora você pode usar latitude e longitude como valores double
-        final Geolocation geolocation = await Geolocation.getGeolocation();
-        bool inRadio = await AttendanceChecker.checkAttendance(
-            latitude, longitude, geolocation.latitude, geolocation.longitude);
-        if (inRadio) {
-          final token = await storage.read(key: 'token');
-          final attendanceIdString = await storage.read(key: 'attendanceId');
-          final id = await storage.read(key: 'id');
-          final url = Uri.parse(
-              'https://engsoft2grupo3api.azurewebsites.net/response/createResponse');
-          final jsonData = json.encode({
-            "studentId": id,
-            "attendanceId": attendanceIdString,
-            "start": "2023-09-21T18:10:00",
-            "end": "2023-09-21T20:10:00"
-          });
-
-          final response = await http.post(
-              url,
-              headers: {
-                'Authorization': 'Bearer $token',
-                'Content-Type': 'application/json'
-              },
-              body: jsonData
-          );
-          if (response.statusCode == 200) {
-            return true;
-          } else {
-            return false;
-          }
-        } else {
-          return false;
-        }
-      }
+    final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json'
+        },
+        body: jsonData
+    );
+    if (response.statusCode == 200) {
+      print("recebi 200 do markAttendance");
+      return true;
     }
-    return false;
+      return false;
+  }
+
+  static Future<bool> checkResponse() async {
+    print("checando o status da chamada");
+    final storage = FlutterSecureStorage();
+    final token = await storage.read(key: 'token');
+    final id = await storage.read(key: 'id');
+    final attendanceIdString = await storage.read(key: 'attendanceId');
+      final url = Uri.parse(
+          'https://engsoft2grupo3api.azurewebsites.net/response/checkResponse');
+      final jsonData = json.encode({
+        "studentId": id,
+        "attendanceId": attendanceIdString,
+      });
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json'
+      },
+      body: jsonData,
+    );
+
+    if (response.statusCode == 200) {
+      print("recebi 200 do checkResponse");
+      final Map<String, dynamic> attendance = json.decode(response.body);
+      final bool hasResponded = attendance['hasResponded'];
+      print(hasResponded);
+      if (hasResponded) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      print(response.statusCode);
+      return false;
+    }
+  }
+
+  static Future<bool> checkRadio() async {
+    try {
+      final storage = FlutterSecureStorage();
+      final latitudeString = await storage.read(key: 'latitude');
+      final longitudeString = await storage.read(key: 'longitude');
+
+      if (latitudeString != null && longitudeString != null) {
+        final latitude = double.parse(latitudeString);
+        final longitude = double.parse(longitudeString);
+
+        final Geolocation geolocation = await  Geolocation.getGeolocation();
+        final bool inRadio = await AttendanceChecker.checkAttendance(
+            latitude,
+            longitude,
+            geolocation.latitude ?? 0.0,
+            geolocation.longitude ?? 0.0
+        );
+        return inRadio;
+      }
+      return false;
+    } catch (e) {
+      print("Erro em checkRadio: $e");
+      return false;
+    }
   }
 }
 

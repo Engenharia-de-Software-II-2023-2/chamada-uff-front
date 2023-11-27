@@ -7,6 +7,7 @@ import '../../providers/switch_provider.dart';
 import '../../api/attendance/manager_attendance.dart';
 import '../../widgets/turmas/turma_switch.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'dart:async';
 
 class ClassroomDetailScreen extends StatefulWidget {
   final Classroom classroom;
@@ -27,9 +28,12 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
   List<String> weekDays = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
   String selectedWeekDay = '';
   bool aluno = false;
+  bool prof = false;
   bool isCallActive = false; // Variável para controlar se há uma chamada ativa
-  bool showConfirmationMessage = false;
-  bool attendanceResult = false;
+  bool attendanceResult = false; // Variável que informa se o aluno já registrou presença
+  bool inRadio = false; // Variável que informa se o aluno está no raio da sala de aula
+  String attendanceText = 'Texto padrão por enquanto';
+  late Timer _timer;
 
   @override
   void initState() {
@@ -37,28 +41,118 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
     _initializeScreen();
   }
 
-  Future<void> _initializeScreen() async {
-    final attendanceStatus = await checkActiveCall();
-    final actualRole = await checkRole();
+  void _checkAndSetIsCallActive(Timer timer) async {
+    final newIsCallActive = await checkActiveCall();
 
-    setState(() {
-      aluno = actualRole;
-      isCallActive = attendanceStatus;
-    });
+    if (newIsCallActive) {
+      setState(() {
+        isCallActive = true;
+      });
+
+      // Cancela o timer, pois não é mais necessário
+      _timer.cancel();
+    }
   }
+
+  // Função para iniciar o timer
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 20), _checkAndSetIsCallActive);
+  }
+  // Função para parar o timer
+  void _stopTimer() {
+    if (_timer.isActive) {
+      _timer.cancel();
+    }
+  }
+
+  Future<void> _initializeScreen() async {
+    try {
+      final attendanceStatus = await checkActiveCall();
+      final actualRole = await checkRole();
+
+      if (actualRole == 'STUDENT') {
+        setState(() {
+          aluno = true;
+          prof = false;
+        });
+
+        if (attendanceStatus) {
+          final hasResponded = await ManagerAttendance.checkResponse();
+
+          if (hasResponded) {
+            setState(() {
+              attendanceResult = true;
+              attendanceText = "Presença confirmada!";
+            });
+          } else {
+            setState(() {
+              attendanceText = "Pressione o botão para marcar presença.";
+            });
+          }
+        } else {
+          setState(() {
+            attendanceText = "Não há chamadas abertas para esta turma.";
+          });
+        }
+      } else if (actualRole == 'PROFESSOR') {
+        setState(() {
+          aluno = false;
+          prof = true;
+        });
+      }
+
+      if (!attendanceStatus) {
+        _startTimer();
+      }
+      setState(() {
+        isCallActive = attendanceStatus;
+      });
+    } catch (e) {
+      // Trate exceções aqui, por exemplo, logando ou relançando para a camada superior.
+      print("Erro em _initializeScreen: $e");
+    }
+  }
+
+  @override
+  void dispose() {
+    // Garanta que o timer seja cancelado quando o widget for descartado
+    _stopTimer();
+    super.dispose();
+  }
+
 
   Future<bool> checkActiveCall() async {
     final hasActiveCall = await ManagerAttendance.checkActiveCall(widget.classroom.id);
     return hasActiveCall;
   }
 
-  Future<bool> checkRole() async{
+  Future<String> checkRole() async {
     final storage = FlutterSecureStorage();
     final role = await storage.read(key: 'role');
-    if(role == "STUDENT"){
-      return true;
+    if (role != null) {
+      return role;
+    } else {
+      throw Exception("Chave 'role' não encontrada no armazenamento seguro.");
+    }
+  }
+
+  Future<void> markAttendance() async {
+    final bool radio =  await ManagerAttendance.checkRadio();
+    if(radio){
+      final bool attendance = await ManagerAttendance.markAttendance();
+      final hasResponded = await ManagerAttendance.checkResponse();
+      if(hasResponded){
+        print("presença confirmada");
+        setState(() {
+          attendanceText = "Presença confirmada!";
+          attendanceResult = true;
+        });
+      }
     } else{
-      return false;
+      print("fora do raio");
+      setState(() {
+        attendanceText = "Você não está no raio da sala de aula";
+      });
     }
   }
 
@@ -122,7 +216,7 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
                   ),
                 ),
               ),
-              if (_isCollapsed && aluno == false) ...[
+              if (_isCollapsed && prof == true) ...[
                   ListTile(
                     title: Text('Iniciar chamada'),
                     trailing: ClassroomSwitch(
@@ -135,10 +229,7 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     if (isCallActive && !attendanceResult) {
-                      attendanceResult = await ManagerAttendance.markAttendance();
-                      setState(() {
-                        showConfirmationMessage = true;
-                      });
+                      await markAttendance();
                     }
                   },
                   child: Text("Marcar Presença"),
@@ -148,21 +239,9 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
                     backgroundColor: attendanceResult ? Colors.grey : null,
                   ),
                 ),
-                if (isCallActive) ...[
-                  Text(attendanceResult ? "Presença confirmada!" : "Pressione o botão para marcar presença."),
-                ] else ...[
-                  Text("Não há chamadas abertas para essa turma no momento."),
-                ],
-                if (showConfirmationMessage) ...[
-                  Text(
-                    attendanceResult ? "Presença confirmada!" : "Você não está no raio da sala de aula",
-                    style: TextStyle(
-                      color: attendanceResult ? Colors.green : Colors.red,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
+                Text(attendanceText),
               ],
+
               if (!_isCollapsed) ...[
                 ListTile(
                   title: Text('Dia da Chamada', style: TextStyle(fontSize: 20)),
