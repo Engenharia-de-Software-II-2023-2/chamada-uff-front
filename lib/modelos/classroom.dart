@@ -15,6 +15,6 @@ class Classroom {
     required this.classCode,
     required this.semester,
     required this.classTime,
-    this.isSwitchOn = false,
+    this.isSwitchOn = false, required bool activeClass,
   });
 }

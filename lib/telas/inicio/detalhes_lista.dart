@@ -8,6 +8,8 @@ import '../../api/attendance/manager_attendance.dart';
 import '../../widgets/turmas/turma_switch.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:async';
+import '../historico_informacoes_turma.dart';
+
 
 class ClassroomDetailScreen extends StatefulWidget {
   final Classroom classroom;
@@ -24,7 +26,7 @@ class ClassroomDetailScreen extends StatefulWidget {
 
 class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
   bool _isCollapsed = true;
-  Attendance attendance = Attendance();
+  Attendance attendance = Attendance(professorLatitude: 11, professorLongitude: 22);
   List<String> weekDays = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
   String selectedWeekDay = '';
   bool aluno = false;
@@ -181,9 +183,11 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  // Navegue para a página de histórico da turma
-                  // Substitua '/historicoTurma' pela rota correta
-                  Navigator.of(context).pushNamed('/historicoTurma');
+                   Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        HistoricoChamada(class_id: widget.classroom.id)));
                 },
                 child: Text('Histórico da Turma'),
               ),

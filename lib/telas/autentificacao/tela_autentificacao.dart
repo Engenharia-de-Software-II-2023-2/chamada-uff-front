@@ -20,9 +20,10 @@ class TelaAutentificacao extends StatelessWidget {
           ElevatedButton(
               onPressed: () {
                 showModalBottomSheet(
+                  isScrollControlled:true,
                   context: context,
                   builder: (BuildContext) {
-                    return TelaLogin();
+                    return SizedBox(height:600,child: TelaLogin());
                   },
                 );
               },
