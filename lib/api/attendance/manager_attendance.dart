@@ -209,14 +209,5 @@ class ManagerAttendance {
       return false;
     }
   }
-<<<<<<< HEAD
-=======
-
-  static Future<bool> markAttendance() async {
-    final storage = FlutterSecureStorage();
-    return true;
-  }
-
->>>>>>> api-requests
 }
 

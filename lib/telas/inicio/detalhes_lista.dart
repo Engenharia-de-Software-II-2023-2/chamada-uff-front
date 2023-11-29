@@ -26,7 +26,7 @@ class ClassroomDetailScreen extends StatefulWidget {
 
 class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
   bool _isCollapsed = true;
-  Attendance attendance = Attendance(professorLatitude: 11, professorLongitude: 22);
+  Attendance attendance = Attendance();
   List<String> weekDays = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
   String selectedWeekDay = '';
   bool aluno = false;

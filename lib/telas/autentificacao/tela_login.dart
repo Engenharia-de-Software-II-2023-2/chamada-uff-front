@@ -3,10 +3,6 @@ import 'package:flutter/material.dart';
 import '../inicio/tela_lista_turmas.dart';
 import '../../api/auth/login.dart';
 import '../padrao/no_information.dart';
-<<<<<<< HEAD
-=======
-import '../../helpers/salas_de_aula_dummy.dart';
->>>>>>> api-requests
 import '../../api/classes/class-list.dart';
 
 

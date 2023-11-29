@@ -7,7 +7,6 @@ import 'dart:convert';
 
 final storage = FlutterSecureStorage();
 Future<List<Classroom>> studentClassList() async {
-<<<<<<< HEAD
   final token = await storage.read(key: 'token');
   final id = await storage.read(key: 'id');
   print(id.toString());
@@ -39,51 +38,17 @@ Future<List<Classroom>> studentClassList() async {
           classCode: turma['className'],
           semester: turma['semester'],
           classTime: turma['schedule'],
+          activeClass: false
         );
       }).toList();
       return classes;
     } else {
       throw Exception('Não há inscrição de turmas nesse período');
-=======
-    //sempre pega o aluno de id 1 idependente de qual fizer login
-    final token = await storage.read(key: 'token');
-    final id = await storage.read(key: 'id');
-    final jsonData =
-        json.encode({"studentId": id, "year": "2023", "semester": 1});
-    final url = Uri.parse(
-        'https://engsoft2grupo3api.azurewebsites.net/enrollment/getStudentEnrollments'); // Substitua pela URL correta
-    final response = await http.post(url,
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json'
-        },
-        body: jsonData);
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      final List<dynamic> classesData = data['enrollments'];
-      if (classesData.isNotEmpty) {
-        List<Classroom> classes = [];
-        for (var element in classesData) {
-          Classroom current_class = Classroom(
-              id: element['id'],
-              name: element['subjectName'],
-              professor: element['professorName'],
-              classCode: element['className'],
-              semester: element['semester'].toString(),
-              classTime: element['schedule'],
-              activeClass: element['active']);
-          classes.add(current_class);
-        }
-        return classes;
-      } else {
-        throw Exception('Não há inscrição de turmas nesse período');
       }
->>>>>>> api-requests
     }
     throw Exception('Falha ao obter a lista de classes');
   }
 
-<<<<<<< HEAD
 Future <List<Classroom>> professorClassList() async {
   final token = await storage.read(key: 'token');
   final id = await storage.read(key: 'id') ?? "0";
@@ -114,49 +79,14 @@ Future <List<Classroom>> professorClassList() async {
           classCode: turma['className'],
           semester: turma['semester'],
           classTime: turma['schedule'],
+          activeClass: false
         );
       }).toList();
 
       return classes;
     } else {
       throw Exception('Não há inscrição de turmas nesse período');
-=======
-
-Future<List<Classroom>> professorClassList() async {
-    //logar com professor, admin123
-    final token = await storage.read(key: 'token');
-    final id = await storage.read(key: 'id');
-    final jsonData =
-        json.encode({"professorId": id, "year": "2023", "semester": 1});
-    final url = Uri.parse(
-        'https://engsoft2grupo3api.azurewebsites.net/class/professsorClasses');
-    final response = await http.post(url,
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json'
-        },
-        body: jsonData);
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      final List<dynamic> classesData = data['professorClasses'];
-      if (classesData.isNotEmpty) {
-        List<Classroom> classes = [];
-        for (var element in classesData) {
-          Classroom current_class = Classroom(
-              id: element['classId'],
-              name: element['subjectName'],
-              professor: "Professor 1",
-              classCode: element['className'],
-              semester: element['semester'].toString(),
-              classTime: element['schedule'],
-              activeClass: element['active']);
-          classes.add(current_class);
-        }
-        return classes;
-      } else {
-        throw Exception('Não há inscrição de turmas nesse período');
       }
->>>>>>> api-requests
     }
     throw Exception('Falha ao obter a lista de classes');
   }

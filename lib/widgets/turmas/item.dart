@@ -44,10 +44,6 @@ class ClassItem extends StatelessWidget {
               ),
             ],
           ),
-<<<<<<< HEAD
-=======
-          trailing: classroom.classCode == 'D1' ? Icon(Icons.check_circle, color: Colors.green) : null,
->>>>>>> api-requests
           onTap: () {
             Navigator.push(
                 context,
