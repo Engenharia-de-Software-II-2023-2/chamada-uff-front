@@ -193,7 +193,7 @@ class ManagerAttendance {
       if (latitudeString != null && longitudeString != null) {
         final latitude = double.parse(latitudeString);
         final longitude = double.parse(longitudeString);
-
+        
         final Geolocation geolocation = await  Geolocation.getGeolocation();
         final bool inRadio = await AttendanceChecker.checkAttendance(
             latitude,

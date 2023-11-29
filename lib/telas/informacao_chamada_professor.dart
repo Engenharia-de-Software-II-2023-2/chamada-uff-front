@@ -22,17 +22,30 @@ Future<List> historico_presenca(chamada_id) async {
     'Content-Type': 'application/json'
   };
   var response = await http.post(url, headers: headers, body: jsonData);
+  //todo:desmockar
   if (response.statusCode == 200) {
-    List data = json.decode(response.body);
-    for (var aluno_atual in data) {
+    List inativos = json.decode(response.body)['absent'];
+    List ativos = json.decode(response.body)['present'];
+    for (var aluno_atual in inativos) {
       PresencaChamadaProfessor presenca = PresencaChamadaProfessor(
           chamada_id: 1,
-          aluno_id: aluno_atual['studentId'],
+          aluno_id: 1,
           id: 1,
           inicio_chamada: "inicio_chamada",
           final_chamada: "final_chamada",
-          presenca: aluno_atual['valid']);
-      presenca.nome_aluno = await presenca.get_nomealuno();
+          presenca: false);
+      presenca.nome_aluno = aluno_atual['name'];
+      alunos.add(presenca);
+    }
+    for (var aluno_atual in ativos) {
+      PresencaChamadaProfessor presenca = PresencaChamadaProfessor(
+          chamada_id: 1,
+          aluno_id: 1,
+          id: 1,
+          inicio_chamada: "inicio_chamada",
+          final_chamada: "final_chamada",
+          presenca: true);
+      presenca.nome_aluno = aluno_atual['name'];
       alunos.add(presenca);
     }
   }
@@ -84,16 +97,16 @@ class _InformacaoChamadaProfessorState
                     Text("Inicio: ${historico_turma.hora_comeco}",
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.w400)),
-                    Text("Encerramento: ${hora_encerramento}",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w400)),
+                    // Text("Encerramento: ${hora_encerramento}",
+                    //     style: TextStyle(
+                    //         fontSize: 20, fontWeight: FontWeight.w400)),
                     SizedBox(
                       height: 30,
                     ),
                     
                     FutureBuilder(
                         future:
-                            historico_presenca(widget.historico_turma.class_id),
+                            historico_presenca(widget.historico_turma.chamada_id),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {

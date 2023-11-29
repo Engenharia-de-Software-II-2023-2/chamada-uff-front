@@ -11,10 +11,10 @@ import 'package:http/http.dart' as http;
 
 Future<List> presenca_aluno(chamada_id, class_id) async {
   final token = await FlutterSecureStorage().read(key: 'token');
-  // final user_id = await FlutterSecureStorage().read(key: 'id');
+  final user_id = await FlutterSecureStorage().read(key: 'id');
   List presencas = [];
-  final class_id = 4;
-  final jsonData = json.encode({"studentId": 1, "classId": 1});
+  // final class_id = 4;
+  final jsonData = json.encode({"studentId": user_id, "classId": class_id});
   final url = Uri.parse(
       'https://engsoft2grupo3api.azurewebsites.net/enrollment/checkStudentAttendanceRecord');
   final response = await http.post(url,
@@ -89,8 +89,8 @@ class _InformacaoChamadaAlunoState extends State<InformacaoChamadaAluno> {
             ),
             Text("Inicio: ${historico_turma.hora_comeco}",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400)),
-            Text("Encerramento: ${hora_encerramento}",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400)),
+            // Text("Encerramento: ${hora_encerramento}",
+            //     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400)),
             SizedBox(
               height: 30,
             ),
@@ -151,28 +151,28 @@ class _InformacaoChamadaAlunoState extends State<InformacaoChamadaAluno> {
                             SizedBox(
                               width: 20,
                             ),
-                            Text("Tempo Restante:",
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w400)),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Container(
-                              width: 120,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8.0)),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text("0",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w400)),
-                              ),
-                            )
+                            // Text("Tempo Restante:",
+                            //     style: TextStyle(
+                            //         fontSize: 20, fontWeight: FontWeight.w400)),
+                            // SizedBox(
+                            //   width: 15,
+                            // ),
+                            // Container(
+                            //   width: 120,
+                            //   height: 40,
+                            //   decoration: BoxDecoration(
+                            //     color: Colors.white,
+                            //     borderRadius:
+                            //         BorderRadius.all(Radius.circular(8.0)),
+                            //   ),
+                              // child: Padding(
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: Text("0",
+                              //       style: TextStyle(
+                              //           fontSize: 20,
+                              //           fontWeight: FontWeight.w400)),
+                              // ),
+                            // )
                           ],
                         ),
                       ],
